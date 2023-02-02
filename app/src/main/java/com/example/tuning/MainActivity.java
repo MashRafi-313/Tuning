@@ -142,8 +142,7 @@ public class MainActivity extends AppCompatActivity {
                 String artist = cursor.getString(4);
 
                 MusicFiles musicFiles = new MusicFiles(path,title,artist,album,duration);
-                //take log.e for check
-                Log.e("path"+ path,"Album"+ album);
+
                 tempAudioList.add(musicFiles);
             }
             cursor.close();
