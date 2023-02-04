@@ -13,6 +13,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
+
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyVieHolder> {
@@ -35,6 +38,15 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyVieHolder>
     @Override
     public void onBindViewHolder(@NonNull MyVieHolder holder, int position) {
         holder.file_name.setText(mfiles.get(position).getTitle());
+        byte[] image = getAlbumArt(mfiles.get(position).getPath());
+        if(image!=null){
+            Glide.with(mcontext).asBitmap()
+                    .load(image).into(holder.album_art);
+        }
+        else{
+            Glide.with(mcontext).load(R.drawable.bewedoc)
+                    .into(holder.album_art);
+        }
     }
 
 
@@ -52,5 +64,15 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyVieHolder>
             album_art= itemView.findViewById(R.id.music_img);
         }
     }
-
+    private  byte[] getAlbumArt(String uri){
+        MediaMetadataRetriever retriever= new MediaMetadataRetriever();
+        retriever.setDataSource(uri);
+        byte[] art = retriever.getEmbeddedPicture();
+        try {
+            retriever.release();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return art;
+    }
 }
