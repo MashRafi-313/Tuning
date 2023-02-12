@@ -1,5 +1,6 @@
 package com.example.tuning;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.media.MediaMetadataRetriever;
@@ -37,7 +38,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyVieHolder>
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyVieHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyVieHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.file_name.setText(mfiles.get(position).getTitle());
         byte[] image = getAlbumArt(mfiles.get(position).getPath());
         if(image!=null){

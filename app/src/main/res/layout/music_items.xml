@@ -2,8 +2,8 @@
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="#111111"
+    android:layout_height="40dp"
+    android:background="#071001"
     android:layout_marginTop="5dp"
     android:id="@+id/audio_item">
 
@@ -19,6 +19,8 @@
         android:layout_height="wrap_content"
         android:id="@+id/music_file_name"
         android:text="File name"
+        android:fontFamily="sans-serif-light"
+        android:singleLine="true"
         android:layout_centerVertical="true"
         android:layout_marginStart="10dp"
         android:layout_toEndOf="@id/music_img"
