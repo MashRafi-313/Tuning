@@ -29,7 +29,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
 
-public class PlayerActivity extends AppCompatActivity {
+public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnCompletionListener {
     TextView song_name,artist_name,duration_played,duration_total;
     ImageView cover_art,nextBtn,prevBtn,backBtn,shuffleBtn,repeatBtn;
     FloatingActionButton playPauseBtn;
@@ -48,6 +48,7 @@ public class PlayerActivity extends AppCompatActivity {
         getIntentMethod();
         song_name.setText(listSongs.get(position).getTitle());
         artist_name.setText(listSongs.get(position).getArtist());
+        mediaPlayer.setOnCompletionListener(this);
         seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -88,56 +89,7 @@ public class PlayerActivity extends AppCompatActivity {
         super.onResume();
     }
 
-    private void playThreadBtn() {
-        playThread = new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                playPauseBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        playPauseBtnClicked();
-                    }
-                });
-            }
-        };
-        playThread.start();
-    }
 
-    private void playPauseBtnClicked() {
-        if(mediaPlayer.isPlaying()){
-            playPauseBtn.setImageResource(R.drawable.ic_baseline_play);
-            mediaPlayer.pause();
-            seekBar.setMax(mediaPlayer.getDuration()/1000);
-            PlayerActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(mediaPlayer != null){
-                        int mCurrentPosition = mediaPlayer.getCurrentPosition()/1000;
-                        seekBar.setProgress(mCurrentPosition);
-                       // duration_played.setText(formattedTime(mCurrentPosition));
-                    }
-                    handler.postDelayed(this,1000);
-                }
-            });
-        }
-        else{
-            playPauseBtn.setImageResource(R.drawable.ic_baseline_pause);
-            mediaPlayer.start();
-            seekBar.setMax(mediaPlayer.getDuration()/1000);
-            PlayerActivity.this.runOnUiThread(new Runnable() {
-                @Override
-                public void run() {
-                    if(mediaPlayer != null){
-                        int mCurrentPosition = mediaPlayer.getCurrentPosition()/1000;
-                        seekBar.setProgress(mCurrentPosition);
-                        // duration_played.setText(formattedTime(mCurrentPosition));
-                    }
-                    handler.postDelayed(this,1000);
-                }
-            });
-        }
-    }
 
     private void prevThreadBtn() {
         prevThread = new Thread(){
@@ -177,7 +129,8 @@ public class PlayerActivity extends AppCompatActivity {
                     handler.postDelayed(this,1000);
                 }
             });
-            playPauseBtn.setImageResource(R.drawable.ic_baseline_pause);
+            mediaPlayer.setOnCompletionListener(this);
+            playPauseBtn.setBackgroundResource(R.drawable.ic_baseline_pause);
             mediaPlayer.start();
         }
         else{
@@ -201,7 +154,8 @@ public class PlayerActivity extends AppCompatActivity {
                     handler.postDelayed(this,1000);
                 }
             });
-            playPauseBtn.setImageResource(R.drawable.ic_baseline_play);
+            mediaPlayer.setOnCompletionListener(this);
+            playPauseBtn.setBackgroundResource(R.drawable.ic_baseline_play);
         }
     }
 
@@ -244,7 +198,8 @@ public class PlayerActivity extends AppCompatActivity {
                     handler.postDelayed(this,1000);
                 }
             });
-            playPauseBtn.setImageResource(R.drawable.ic_baseline_pause);
+            mediaPlayer.setOnCompletionListener(this);
+            playPauseBtn.setBackgroundResource(R.drawable.ic_baseline_pause);
             mediaPlayer.start();
         }
         else{
@@ -268,7 +223,59 @@ public class PlayerActivity extends AppCompatActivity {
                     handler.postDelayed(this,1000);
                 }
             });
+            mediaPlayer.setOnCompletionListener(this);
+            playPauseBtn.setBackgroundResource(R.drawable.ic_baseline_play);
+        }
+    }
+
+    private void playThreadBtn() {
+        playThread = new Thread(){
+            @Override
+            public void run() {
+                super.run();
+                playPauseBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        playPauseBtnClicked();
+                    }
+                });
+            }
+        };
+        playThread.start();
+    }
+
+    private void playPauseBtnClicked() {
+        if(mediaPlayer.isPlaying()){
             playPauseBtn.setImageResource(R.drawable.ic_baseline_play);
+            mediaPlayer.pause();
+            seekBar.setMax(mediaPlayer.getDuration()/1000);
+            PlayerActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(mediaPlayer != null){
+                        int mCurrentPosition = mediaPlayer.getCurrentPosition()/1000;
+                        seekBar.setProgress(mCurrentPosition);
+                        // duration_played.setText(formattedTime(mCurrentPosition));
+                    }
+                    handler.postDelayed(this,1000);
+                }
+            });
+        }
+        else{
+            playPauseBtn.setImageResource(R.drawable.ic_baseline_pause);
+            mediaPlayer.start();
+            seekBar.setMax(mediaPlayer.getDuration()/1000);
+            PlayerActivity.this.runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    if(mediaPlayer != null){
+                        int mCurrentPosition = mediaPlayer.getCurrentPosition()/1000;
+                        seekBar.setProgress(mCurrentPosition);
+                        // duration_played.setText(formattedTime(mCurrentPosition));
+                    }
+                    handler.postDelayed(this,1000);
+                }
+            });
         }
     }
 
@@ -432,6 +439,16 @@ public class PlayerActivity extends AppCompatActivity {
         imageView.startAnimation(animOut);
     }
 
+
+    @Override
+    public void onCompletion(MediaPlayer mp) {
+        nextBtnClicked();
+        if(mediaPlayer != null){
+            mediaPlayer = MediaPlayer.create(getApplicationContext(),uri);
+            mediaPlayer.start();
+            mediaPlayer.setOnCompletionListener(this);
+        }
+    }
 }
 
 
