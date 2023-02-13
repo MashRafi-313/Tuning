@@ -2,6 +2,7 @@ package com.example.tuning;
 
 import static com.example.tuning.MainActivity.musicFiles;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -12,6 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -331,13 +334,10 @@ public class PlayerActivity extends AppCompatActivity {
         int durationTotal = Integer.parseInt(listSongs.get(position).getDuration())/1000;
         duration_total.setText(formattedTime(durationTotal));
         byte[] art = retriever.getEmbeddedPicture();
-        Bitmap bitmap;
+        Bitmap bitmap ;
         if(art != null){
-            Glide.with(this)
-                    .asBitmap()
-                    .load(art)
-                    .into(cover_art);
             bitmap = BitmapFactory.decodeByteArray(art,0,art.length);
+            ImageAnimation(this,cover_art,bitmap);
             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
                 @Override
                 public void onGenerated(@Nullable Palette palette) {
@@ -383,9 +383,55 @@ public class PlayerActivity extends AppCompatActivity {
             RelativeLayout mContainer = findViewById(R.id.mContainer);
             gradient.setBackgroundResource(R.drawable.gradient_bg);
             mContainer.setBackgroundResource(R.drawable.main_bg);
+            GradientDrawable gradientDrawable = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP,
+                    new int[]{0xff000000,0x00000000});
+            gradient.setBackground(gradientDrawable);
+            GradientDrawable gradientDrawableBg = new GradientDrawable(GradientDrawable.Orientation.BOTTOM_TOP,
+                    new int[]{0xff000000,0xff000000});
+            mContainer.setBackground(gradientDrawableBg);
             song_name.setTextColor(Color.WHITE);
             artist_name.setTextColor(Color.DKGRAY);
         }
     }
+    public void  ImageAnimation(Context context, ImageView imageView,Bitmap bitmap){
+        Animation animOut = AnimationUtils.loadAnimation(context, android.R.anim.fade_out);
+        Animation animIn = AnimationUtils.loadAnimation(context, android.R.anim.fade_in);
+        animOut.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+
+            }
+
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Glide.with(context).load(bitmap).into(imageView);
+                animIn.setAnimationListener(new Animation.AnimationListener() {
+                    @Override
+                    public void onAnimationStart(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationEnd(Animation animation) {
+
+                    }
+
+                    @Override
+                    public void onAnimationRepeat(Animation animation) {
+
+                    }
+                });
+                imageView.startAnimation(animIn);
+            }
+
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        imageView.startAnimation(animOut);
+    }
 
 }
+
+
