@@ -4,6 +4,7 @@ import static com.example.tuning.AlbumDetailsAdapter.albumFiles;
 import static com.example.tuning.MainActivity.musicFiles;
 import static com.example.tuning.MainActivity.repeatBoolean;
 import static com.example.tuning.MainActivity.shuffleBoolean;
+import static com.example.tuning.MusicAdapter.mFiles;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -374,7 +375,7 @@ public class PlayerActivity extends AppCompatActivity implements MediaPlayer.OnC
             listSongs = albumFiles;
         }
         else{
-            listSongs = musicFiles;
+            listSongs = mFiles;
         }
         if(listSongs!= null){
             playPauseBtn.setImageResource(R.drawable.ic_baseline_pause);

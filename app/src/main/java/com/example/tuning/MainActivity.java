@@ -7,11 +7,14 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.SearchView;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
@@ -22,10 +25,11 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 import kotlin.jvm.internal.markers.KMutableCollection;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
     public static final int REQUEST_CODE = 1;
     static ArrayList<MusicFiles> musicFiles;
@@ -78,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(viewPagerAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
-
-
 
     public static class ViewPagerAdapter extends FragmentPagerAdapter{
 
@@ -154,5 +156,32 @@ public class MainActivity extends AppCompatActivity {
             cursor.close();
         }
         return  tempAudioList;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.search,menu);
+        MenuItem menuItem = menu.findItem(R.id.search_option);
+        SearchView searchView =(SearchView) menuItem.getActionView();
+        searchView.setOnQueryTextListener(this);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onQueryTextSubmit(String query) {
+        return false;
+    }
+
+    @Override
+    public boolean onQueryTextChange(String newText) {
+        String userInput = newText.toLowerCase();
+        ArrayList<MusicFiles> myFiles = new ArrayList<>();
+        for(MusicFiles song :musicFiles){
+            if(song.getTitle().toLowerCase().contains(userInput)){
+                myFiles.add(song);
+            }
+        }
+        SongsFragment.musicAdapter.updateList(myFiles);
+        return true;
     }
 }
