@@ -1,6 +1,7 @@
 package com.example.tuning;
 
 import static com.example.tuning.AlbumDetailsAdapter.albumFiles;
+import static com.example.tuning.ApplicationClass.ACTION_NEXT;
 import static com.example.tuning.ApplicationClass.ACTION_PLAY;
 import static com.example.tuning.ApplicationClass.ACTION_PREVIOUS;
 import static com.example.tuning.ApplicationClass.CHANNEL_ID_2;
@@ -585,12 +586,12 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
                 pauseIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         Intent nextIntent = new Intent(this,NotificationReceiver.class)
-                .setAction(ACTION_PREVIOUS);
+                .setAction(ACTION_NEXT);
         PendingIntent nextPending = PendingIntent.getBroadcast(this,0,
                 nextIntent,PendingIntent.FLAG_UPDATE_CURRENT);
 
         byte[] picture = null;
-        picture = getAlbumArt(musicFiles.get(position).getPath());
+        picture = getAlbumArt(listSongs.get(position).getPath());
         Bitmap thumb = null;
         if(picture!=null){
             thumb = BitmapFactory.decodeByteArray(picture,0,picture.length);
@@ -601,11 +602,11 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
         Notification notification = new NotificationCompat.Builder(this,CHANNEL_ID_2)
                 .setSmallIcon(playPauseBtn)
                 .setLargeIcon(thumb)
-                .setContentTitle(musicFiles.get(position).getTitle())
-                .setContentText(musicFiles.get(position).getArtist())
+                .setContentTitle(listSongs.get(position).getTitle())
+                .setContentText(listSongs.get(position).getArtist())
                 .addAction(R.drawable.ic_baseline_skip_previous,"Previous",prevPending)
-                .addAction(R.drawable.ic_baseline_skip_next,"Next",nextPending)
                 .addAction(playPauseBtn,"Pause",pausePending)
+                .addAction(R.drawable.ic_baseline_skip_next,"Next",nextPending)
                 .setStyle(new androidx.media.app.NotificationCompat.MediaStyle()
                         .setMediaSession(mediaSessionCompat.getSessionToken()))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
