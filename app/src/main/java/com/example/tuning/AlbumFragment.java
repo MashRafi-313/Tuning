@@ -1,5 +1,6 @@
 package com.example.tuning;
 
+import static com.example.tuning.MainActivity.albums;
 import static com.example.tuning.MainActivity.musicFiles;
 
 import android.os.Bundle;
@@ -31,8 +32,8 @@ public class AlbumFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_album, container, false);
         recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setHasFixedSize(true);
-        if(!(musicFiles.size() < 1)){
-            albumAdapter = new AlbumAdapter(getContext(),musicFiles);
+        if(!(albums.size() < 1)){
+            albumAdapter = new AlbumAdapter(getContext(),albums);
             recyclerView.setAdapter(albumAdapter);
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
         }

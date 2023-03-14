@@ -28,11 +28,11 @@ import java.util.ArrayList;
 public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyVieHolder> {
 
     private Context mcontext;
-    private ArrayList<MusicFiles> mfiles;
+    static ArrayList<MusicFiles> mFiles;
 
-    public MusicAdapter(Context mcontext, ArrayList<MusicFiles> mfiles) {
+    public MusicAdapter(Context mcontext, ArrayList<MusicFiles> mFiles) {
         this.mcontext = mcontext;
-        this.mfiles = mfiles;
+        this.mFiles = mFiles;
     }
 
     @NonNull
@@ -44,8 +44,8 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyVieHolder>
 
     @Override
     public void onBindViewHolder(@NonNull MyVieHolder holder, @SuppressLint("RecyclerView") int position) {
-        holder.file_name.setText(mfiles.get(position).getTitle());
-        byte[] image = getAlbumArt(mfiles.get(position).getPath());
+        holder.file_name.setText(mFiles.get(position).getTitle());
+        byte[] image = getAlbumArt(mFiles.get(position).getPath());
         if(image!=null){
             Glide.with(mcontext).asBitmap()
                     .load(image).into(holder.album_art);
@@ -86,14 +86,14 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyVieHolder>
     private void deleteFile(int position, View v)
     {
         Uri contentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
-                Long.parseLong(mfiles.get(position).getId()));//content
-        File file = new File((mfiles.get(position).getPath()));
+                Long.parseLong(mFiles.get(position).getId()));//content
+        File file = new File((mFiles.get(position).getPath()));
         boolean deleted = file.delete();//delete your file
         if(deleted) {
             mcontext.getContentResolver().delete(contentUri,null,null);
-            mfiles.remove(position);
+            mFiles.remove(position);
             notifyItemRemoved(position);
-            notifyItemRangeChanged(position, mfiles.size());
+            notifyItemRangeChanged(position, mFiles.size());
             Snackbar.make(v, "File Deleted:", Snackbar.LENGTH_SHORT).show();
         }
         else{
@@ -106,7 +106,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyVieHolder>
 
     @Override
     public int getItemCount() {
-        return mfiles.size();
+        return mFiles.size();
     }
 
     public  class MyVieHolder extends RecyclerView.ViewHolder{
@@ -129,5 +129,11 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.MyVieHolder>
             e.printStackTrace();
         }
         return art;
+    }
+
+    void updateList(ArrayList<MusicFiles> musicFilesArrayList){
+          mFiles = new ArrayList<>();
+          mFiles.addAll(musicFilesArrayList);
+          notifyDataSetChanged();
     }
 }
