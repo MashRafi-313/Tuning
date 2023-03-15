@@ -10,7 +10,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,9 +25,6 @@ import androidx.viewpager.widget.ViewPager;
 import com.google.android.material.tabs.TabLayout;
 
 import java.util.ArrayList;
-import java.util.Locale;
-
-import kotlin.jvm.internal.markers.KMutableCollection;
 
 public class MainActivity extends AppCompatActivity implements SearchView.OnQueryTextListener {
 
@@ -42,7 +38,7 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         permission();
-        initViewPager();
+       // initViewPager();
     }
 
 
@@ -53,8 +49,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
                 {Manifest.permission.WRITE_EXTERNAL_STORAGE},REQUEST_CODE);
         }
         else{
-            Toast.makeText(this,"permission granted",Toast.LENGTH_SHORT).show();
+           // Toast.makeText(this,"permission granted",Toast.LENGTH_SHORT).show();
             musicFiles = getAllAudio(this);
+            initViewPager();
         }
     }
 
@@ -64,8 +61,9 @@ public class MainActivity extends AppCompatActivity implements SearchView.OnQuer
         if(requestCode == REQUEST_CODE){
             if(grantResults[0]== PackageManager.PERMISSION_GRANTED){
                 //DO whatever i want
-                Toast.makeText(this,"permission granted",Toast.LENGTH_SHORT).show();
+               // Toast.makeText(this,"permission granted",Toast.LENGTH_SHORT).show();
                 musicFiles = getAllAudio(this);
+                initViewPager();
             }
             else{
                 ActivityCompat.requestPermissions(MainActivity.this,new String[]
