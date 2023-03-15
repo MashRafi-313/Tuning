@@ -1,19 +1,10 @@
 package com.example.tuning;
 
 import static com.example.tuning.AlbumDetailsAdapter.albumFiles;
-import static com.example.tuning.ApplicationClass.ACTION_NEXT;
-import static com.example.tuning.ApplicationClass.ACTION_PLAY;
-import static com.example.tuning.ApplicationClass.ACTION_PREVIOUS;
-import static com.example.tuning.ApplicationClass.CHANNEL_ID_2;
-import static com.example.tuning.MainActivity.musicFiles;
 import static com.example.tuning.MainActivity.repeatBoolean;
 import static com.example.tuning.MainActivity.shuffleBoolean;
 import static com.example.tuning.MusicAdapter.mFiles;
 
-import android.annotation.SuppressLint;
-import android.app.Notification;
-import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -23,13 +14,10 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.media.MediaMetadataRetriever;
-import android.media.MediaPlayer;
-import android.media.session.MediaSession;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
-import android.support.v4.media.session.MediaSessionCompat;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -39,17 +27,14 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.NotificationCompat;
 import androidx.palette.graphics.Palette;
 
 import com.bumptech.glide.Glide;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -189,6 +174,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
             musicService.createMediaPlayer(position);
             metaData(uri);
             song_name.setText(listSongs.get(position).getTitle());
+            song_name.setSelected(true);
             artist_name.setText(listSongs.get(position).getArtist());
             seekBar.setMax(musicService.getDuration()/1000);
             PlayerActivity.this.runOnUiThread(new Runnable() {
@@ -224,6 +210,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
             musicService.createMediaPlayer(position);
             metaData(uri);
             song_name.setText(listSongs.get(position).getTitle());
+            song_name.setSelected(true);
             artist_name.setText(listSongs.get(position).getArtist());
             seekBar.setMax(musicService.getDuration()/1000);
             PlayerActivity.this.runOnUiThread(new Runnable() {
@@ -278,6 +265,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
             musicService.createMediaPlayer(position);
             metaData(uri);
             song_name.setText(listSongs.get(position).getTitle());
+            song_name.setSelected(true);
             artist_name.setText(listSongs.get(position).getArtist());
             seekBar.setMax(musicService.getDuration()/1000);
             PlayerActivity.this.runOnUiThread(new Runnable() {
@@ -312,6 +300,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
             musicService.createMediaPlayer(position);
             metaData(uri);
             song_name.setText(listSongs.get(position).getTitle());
+            song_name.setSelected(true);
             artist_name.setText(listSongs.get(position).getArtist());
             seekBar.setMax(musicService.getDuration()/1000);
             PlayerActivity.this.runOnUiThread(new Runnable() {
@@ -418,6 +407,7 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
             playPauseBtn.setImageResource(R.drawable.ic_baseline_pause);
             uri = Uri.parse(listSongs.get(position).getPath());
         }
+       // musicService.showNotification(R.drawable.ic_baseline_pause);
         Intent intent = new Intent(this,MusicService.class);
         intent.putExtra("servicePosition",position);
         startService(intent);
@@ -551,11 +541,11 @@ public class PlayerActivity extends AppCompatActivity implements ActionPlaying, 
         MusicService.MyBinder myBinder = (MusicService.MyBinder) service;
         musicService = myBinder.getService();
         musicService.setCallBack(this);
-        Toast.makeText(this, "Connected" + musicService,
-                Toast.LENGTH_SHORT).show();
+       // Toast.makeText(this, "Connected" + musicService,Toast.LENGTH_SHORT).show();
         seekBar.setMax(musicService.getDuration()/1000);
         metaData(uri);
         song_name.setText(listSongs.get(position).getTitle());
+        song_name.setSelected(true);
         artist_name.setText(listSongs.get(position).getArtist());
         musicService.OnCompleted();
         musicService.showNotification(R.drawable.ic_baseline_pause);

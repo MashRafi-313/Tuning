@@ -1,6 +1,5 @@
 package com.example.tuning;
 
-import static android.app.Notification.VISIBILITY_PUBLIC;
 import static com.example.tuning.ApplicationClass.ACTION_NEXT;
 import static com.example.tuning.ApplicationClass.ACTION_PLAY;
 import static com.example.tuning.ApplicationClass.ACTION_PREVIOUS;
@@ -12,7 +11,6 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -22,17 +20,12 @@ import android.net.Uri;
 import android.os.Binder;
 import android.os.IBinder;
 import android.support.v4.media.session.MediaSessionCompat;
-import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 import java.io.IOException;
-import java.security.Provider;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public class MusicService extends Service implements MediaPlayer.OnCompletionListener {
     IBinder mBinder = new MyBinder();
@@ -51,7 +44,6 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
     @Nullable
     @Override
     public IBinder onBind(Intent intent) {
-        Log.e("Bind","Method");
         return mBinder;
     }
 
@@ -73,26 +65,17 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
         if(actionName!=null){
             switch (actionName){
                 case "playPause":
-                    Toast.makeText(this, "PlayPause",
-                            Toast.LENGTH_SHORT).show();
                     if(actionPlaying!= null){
-                        Log.e("Inside","Action");
                         actionPlaying.playPauseBtnClicked();
                     }
                     break;
                 case "next":
-                    Toast.makeText(this, "Next",
-                            Toast.LENGTH_SHORT).show();
                     if(actionPlaying!= null){
-                        Log.e("Inside","Action");
                         actionPlaying.nextBtnClicked();
                     }
                     break;
                 case "previous":
-                    Toast.makeText(this, "Previous",
-                            Toast.LENGTH_SHORT).show();
                     if(actionPlaying!= null){
-                       Log.e("Inside","Action");
                         actionPlaying.prevBtnClicked();
                     }
                     break;
@@ -207,9 +190,8 @@ public class MusicService extends Service implements MediaPlayer.OnCompletionLis
                         .setMediaSession(mediaSessionCompat.getSessionToken()))
                 .setPriority(NotificationCompat.PRIORITY_HIGH)
                 .setOnlyAlertOnce(true)
-                //.setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
                 .build();
-       // startForeground(0,notification);
+
         NotificationManager notificationManager =
                 (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
         notificationManager.notify(0,notification);
